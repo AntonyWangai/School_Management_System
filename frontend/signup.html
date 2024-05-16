@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <link rel="stylesheet" href="./signup1.css" /> 
+ <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up</title>
+    <script src="https://kit.fontawesome.com/6de1137fe1.js" crossorigin="anonymous"></script>
+</head>
+<body>
+   
+  <div class="form">
+    <form id="signup-form" >
+        <label for="name">Full Name:</label>
+        <input type="text" id="name" name="fullname" required />
+        <label for="regno">Registration Number:</label>
+        <input type="text" id="regno" name="regno" required />
+        <label for="nationalid">National ID:</label>
+        <input type="text" id="nationalid" name="nationalid" required />
+        <label for="ksce">KCSE Index Number:</label>
+        <input type="text" id="ksce" name="ksce" required />
+        <label for="birthdate">Date of Birth:</label>
+        <input type="date" id="birthdate" name="birthdate" required />
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required/>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required />
+        <label for="confirmpass">Confirm Password:</label>
+        <input type="password" id="confirmpass" name="confirmpass" required />
+        <button type="submit">Sign Up</button>
+        <button onclick="window.location.href='./signin.html'">Login</button>
+    </form>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+document.getElementById("signup-form").addEventListener("submit", function (event) {
+    event.preventDefault();
+
+    var fullname = document.getElementById("name").value;
+    var email = document.getElementById("email").value;
+    var password = document.getElementById("password").value;
+    var confirmpass = document.getElementById("confirmpass").value;
+
+    if (password != confirmpass) {
+        alert("Password and Confirm Password do not match");
+    } else {
+        const url = "http://localhost/School_Management_System/backend/signUp.php";
+        let fData = new FormData();
+        fData.append("fullname", fullname);
+        fData.append("email", email);
+        fData.append("password", password);
+        fData.append("regno", document.getElementById("regno").value);
+        fData.append("nationalid", document.getElementById("nationalid").value);
+        fData.append("ksce", document.getElementById("ksce").value);
+        fData.append("birthdate", document.getElementById("birthdate").value);
+
+        fetch(url, {
+            method: "POST",
+            body: fData,
+        })
+        .then((response) => response.json())
+        .then((data) => {
+            console.log(data);
+            if(data.status === "success") {
+                alert("Welcome " + fullname + " to Ruaraka University");
+                window.location.href = "signin.html"; // Redirect to signin.html after successful sign up
+            } else {
+                alert("Error: " + data.message);
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+            alert("Such a user already exists. Please try again!");
+        });
+    }
+});
+});
+</script>
+
+</body>
+</html>
